@@ -458,6 +458,8 @@ ninja -C build
 ninja -C build install --tags runtime,man
 ```
 
+Custom build flags can be found in [`meson_options.txt`](https://github.com/hyprwm/Hyprland/blob/main/meson_options.txt).
+
 Refer to [Debugging](../../Contributing-and-Debugging) to see how to build &
 debug.
 
@@ -492,18 +494,20 @@ make <PRESET> && sudo cp ./build/Hyprland /usr/bin && sudo cp ./example/hyprland
 
 To apply custom build flags, you'll have to ditch make.
 
-Supported custom build flags:
+Supported custom build flags on CMake:
 
 ```bash
 LEGACY_RENDERER - Compiles with the legacy renderer (see above)
 NO_XWAYLAND - Removes XWayland support
 NO_SYSTEMD - Removes systemd dependencies
+NO_UWSM - Does not install the hyprland-uwsm.desktop file
+NO_HYPRPM - Does not build and install hyprpm
 ```
 
 Flags can be passed to CMake like this:
 
 ```bash
-cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -D<FLAG>:STRING=true -B build -G Ninja
+cmake --no-warn-unused-cli -DCMAKE_BUILD_TYPE:STRING=Release -D<FLAG>:STRING=true -B build
 ```
 
 Change `<FLAG>` to one of the custom build flags. Multiple flags can be used at
@@ -514,7 +518,7 @@ The `BUILD_TYPE` can also be changed to `Debug`.
 To build, run:
 
 ```bash
-cmake --build ./build --config Release --target all
+cmake --build ./build --config Release --target all -j`nproc 2>/dev/null || getconf NPROCESSORS_CONF`
 ```
 
 If you configured in `Debug`, change the `--config` to `Debug` as well.
